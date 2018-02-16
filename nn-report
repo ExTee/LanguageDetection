@@ -1,0 +1,41 @@
+http://www.heatonresearch.com/2017/06/01/hidden-layers.html
+
+^number of neurons
+
+I have a few rules of thumb that I use to choose hidden layers. There are many rule-of-thumb methods for determining an acceptable number of neurons to use in the hidden layers, such as the following:
+
+The number of hidden neurons should be between the size of the input layer and the size of the output layer.
+The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
+The number of hidden neurons should be less than twice the size of the input layer.
+
+
+Preprocessing for nn:
+
+For the training data，we collected the entire alphabet for Slovak, French, Spanish, German and Polish. This "bag of characters" contains 73 different lower-case characters. This set consists of 26 basic English letters, 4 German letters, 16 French letters, 7 Spanish letters, 21 Slovak letters, 9 Polish letters, and 5 punctuations. Note that some of the language-specific special letters are duplicated in two or more languages. Therefore, there are 73 unique symbols in our accepted alphabet.
+
+For the training set of utterances, we first removed any http links with regex.
+
+We then used the "bag of characters" approach, similar to "bag of words". Doing so, we represented each training entry as an array of size 73, with each index of the array representing a letter. The number at index i of the array corresponds to the number of times the letter associated to index i appears in the training sample. Each index will correspond to a feature in our model.
+
+The same procedure was conducted with the testing set of utterances.
+
+For the categorical labels of the utterances, one-hot encoding was used, where an array of size 5 was used, with each index corresponding to a language. One index will have the value "1", while the rest will be "0".
+
+
+
+Problem design for nn:
+
+Our Neural Network was designed and implemented using Keras, with TensorFlow backend. Most computations were performed with a MacBook Air, 1.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3 RAM.
+
+
+For the structure of our Neural Network, we used a Sequential (a linear stack of layers). The artificial neural network will consist of one input layer, two hidden layers and one output layer.
+
+Each dense hidden layer has a Sigmoid activation function and was initialized with a Glorot uniform distribution, whereas the output layer will have a softmax. The softmax function was used to obtain a probability function which we can apply our cross-entropy loss function on. To optimize our loss function, Adam optimizer, an algorithm for first-order gradient-based optimization of stochastic objective functions[cite: https://arxiv.org/abs/1412.6980v8], was used with Keras-recommended hyperparameters.
+
+In order to validate our data, 10% was kept and randomized.
+The resulting neural network was trained over 12 epochs. This number of epochs was determined as a reasonable amount of training due to each
+epoch taking around 150s, totalling 30 minutes with 12 epochs. The model with weights of the epoch which resulted in the highest validation accuracy was used to predict the final testing values. These values were output into .csv format and submitted for accuracy testing on Kaggle.
+
+
+
+
